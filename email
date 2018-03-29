@@ -1,0 +1,44 @@
+import smtplib
+import ctypes  # An included library with Python install.
+def Mbox(title, text, style):
+    return ctypes.windll.user32.MessageBoxW(0, text, title, style)
+
+##  Styles:
+##  0 : OK
+##  1 : OK | Cancel
+##  2 : Abort | Retry | Ignore
+##  3 : Yes | No | Cancel
+##  4 : Yes | No
+##  5 : Retry | No 
+##  6 : Cancel | Try Again | Continue
+
+Mbox('Message From Bot', 'Bot trying to send mail to destined person', 0)
+
+def sendemail(from_addr, to_addr_list, cc_addr_list,
+              subject, message,
+              login, password,
+              smtpserver='smtp-mail.outlook.com:587'):
+    header  = 'From: %s\n' % from_addr
+    header += 'To: %s\n' % ','.join(to_addr_list)
+    header += 'Cc: %s\n' % ','.join(cc_addr_list)
+    header += 'Subject: %s\n\n' % subject
+    message = header + message
+ 
+    server = smtplib.SMTP(smtpserver)
+    server.starttls()
+    server.login(login,password)
+    problems = server.sendmail(from_addr, to_addr_list, message)
+    server.quit()
+    return problems
+
+sendemail(from_addr    = 'tanigai@outlook.com', 
+          to_addr_list = ['thaselva@cisco.com'],
+          cc_addr_list = ['thaselva@cisco.com'], 
+          subject      = 'From TanBot: First Bot', 
+          message      = 'Tan ! You are on Bot world', 
+          login        = 'tanigai@outlook.com', 
+          password     = 'xxxxx',
+		  smtpserver='smtp-mail.outlook.com:587') 
+		  
+		  
+Mbox('Message From Bot', 'Sent...', 0)
